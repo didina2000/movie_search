@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Movie Search</title>
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
+      defer
+    ></script>
+  </head>
+  <body class="bg-gray-100 mx-10">
+    <h1 class="font-bold text-5xl my-5 text-red-600">Movie Search</h1>
+    <input
+      class="
+        border border-2 border-solid border border-red-900
+        rounded
+        text-center
+        flex-grow
+        float-left
+      "
+      type="text"
+      id="movieName"
+      name="movieName"
+      placeholder="Enter movie name"
+    />
+    <span></span>
+    <button class="bg-red-500 text-white px-6 font-bold rounded-lg mx-1">
+      Search
+    </button>
+    <div
+      id="movie_grid"
+      class="grid grid-cols-5 place-items-stretch gap-4 space-y-3 m-3 my-10"
+    ></div>
+
+    <script>
+      let inputEl = document.querySelectorAll("input");
+      inputEl.forEach((node) => (node.onchange = movieSearch));
+
+      async function movieSearch(event) {
+        const MOVIE_SEARCH_API = `http://www.omdbapi.com/?s=${event.srcElement.value}&apikey=8bf835a0`;
+
+        await fetch(MOVIE_SEARCH_API)
+          .then((response) => response.json())
+          .then((data) => {
+            const movies = data.Search;
+            const movieGrid = [];
+            movies.forEach((movie) => {
+              const link = movie.Poster;
+              movieGrid.push("<img src=" + link + ">");
+            });
+
+            document.getElementById("movie_grid").innerHTML =
+              movieGrid.join("");
+          });
+      }
+    </script>
+  </body>
+</html>
